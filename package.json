@@ -5,19 +5,32 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy-production": "vue-cli-service build --mode && rsync -avh --delete dist/ ri346267@ri346267.ftp.tools:/home/ri346267/ephemeris.store/www/dist/"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "moment": "^2.29.1",
+    "vue": "^2.6.11",
+    "vue-router": "^3.5.1",
+    "vue-select": "^3.11.2",
+    "vue-simple-suggest": "^1.10.3",
+    "vue-star-rating": "^1.7.0",
+    "vuex": "^3.6.2",
+    "vuex-persist": "^3.1.3"
   },
   "devDependencies": {
+    "@tailwindcss/postcss7-compat": "^2.0.3",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
+    "autoprefixer": "^9",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "postcss": "^7",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
