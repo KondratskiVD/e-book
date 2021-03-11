@@ -6,11 +6,15 @@
 
 <script>
 import Main from './layouts/Main.vue'
+import auth from '@/http/requests/auth/index.js'
 
 export default {
   name: 'App',
   components: {
     Main
+  },
+  async created () {
+    auth.init()
   }
 }
 </script>

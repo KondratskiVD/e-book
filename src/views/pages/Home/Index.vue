@@ -13,68 +13,20 @@
       <!--        </div>-->
       <!--      </nav>-->
       <!--    </div>-->
-      <vue-simple-suggest
-          pattern="\w+"
-          v-model="model"
-          :list="getList"
-          :max-suggestions="5"
-          :min-length="3"
-          :debounce="200"
-          :filter-by-query="false"
-          :prevent-submit="true"
-          :controls="{
-                  selectionUp: [38, 33],
-                  selectionDown: [40, 34],
-                  select: [13, 36],
-                  hideList: [27, 35]
-                }"
-          mode="input"
-          :nullable-select="true"
-          ref="suggestComponent"
-          value-attribute="product_id"
-          display-attribute="product_name"
-          @select="onSuggestSelect"
-          class="w-full"
-      >
-        <div class="input-icons w-full">
-          <span class="w-auto flex justify-end items-center text-icon p-2">
-            <svg
-                class="h-6 w-6 text-gray-300 icon"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-          </span>
-          <input class="input-field w-full" type="text" placeholder="Назва книжки або автора" v-model="model">
-        </div>
-
-        <!--        <template slot="misc-item-above" slot-scope="{ suggestions, query }">-->
-
-        <!--          <template v-if="suggestions.length > 0">-->
-        <!--            <div class="misc-item">-->
-        <!--              <span>{{ suggestions.length }} предложенных вариантов...</span>-->
-        <!--            </div>-->
-        <!--            <hr>-->
-        <!--          </template>-->
-
-        <!--          <div class="misc-item" v-else>-->
-        <!--            <span>Нет результатов поиска</span>-->
-        <!--          </div>-->
-        <!--        </template>-->
-
-        <div slot="suggestion-item" slot-scope="scope" :title="scope.suggestion.description">
-          <div class="text">
-            <span v-html="boldenSuggestion(scope)"></span>
-          </div>
-        </div>
-
-        <!--        <div class="misc-item" slot="misc-item-below" slot-scope="{ suggestions }">-->
-        <!--          <span>Загрузка...</span>-->
-        <!--        </div>-->
-      </vue-simple-suggest>
+      <div class="input-icons w-full">
+        <span class="w-auto flex justify-end items-center text-icon p-2">
+          <svg
+              class="h-6 w-6 text-gray-300 icon"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </span>
+        <input class="input-field w-full" type="text" placeholder="Назва книжки або автора" v-model="model">
+      </div>
       <button class="text-icon p-2 pl-4 pr-4">
         <p class="font-semibold text-xs">
           <svg
@@ -92,166 +44,112 @@
         </p>
       </button>
     </div>
-    <div class="pt-10 flex justify-between items-center">
-      <h2 class="text-2xl text-blue-4 inline-block">Популярнi книжки</h2>
-      <p class="text-blue-1 cursor-pointer">Бiльше</p>
+
+    <div class="py-6" v-for="row in books" :key="row.id">
+      <h2 class="text-2xl text-blue-4 text-left pb-2">{{  row.name | capitalize }}</h2>
+      <swiper
+          class="swiper"
+          :options="swiperOption"
+      >
+        <swiper-slide v-for="book in row.descriptions" :key="book.id">
+          <Cover
+            :description="book"
+          />
+        </swiper-slide>
+        <div class="swiper-pagination" slot="pagination"></div>
+        <div class="swiper-button-prev" slot="button-prev"></div>
+        <div class="swiper-button-next" slot="button-next"></div>
+      </swiper>
     </div>
-    <div class="py-6">
-      <div class="grid grid-cols-6 gap-4">
-        <div>
-          <img src="@/assets/images/2021-03-09_15-42.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-09_15-50.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-09_15-52.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-09_15-53.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-09_15-55.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-09_15-42.png" alt="">
-        </div>
-      </div>
-    </div>
-    <div class="pt-10 flex justify-between items-center">
-      <h2 class="text-2xl text-blue-4 inline-block">Популярнi жанри</h2>
-      <p class="text-blue-1 cursor-pointer">Бiльше</p>
-    </div>
-    <div class="py-6">
-      <div class="grid grid-cols-6 gap-4">
-        <div v-for="(genre, index) in genres" :key="index">
-          <p
-              :style="{background: randomColor[index]}"
-              class="py-5 text-white"
-          >{{ genre }}</p>
-        </div>
-      </div>
-    </div>
-    <div class="pt-10 flex justify-between items-center">
-      <h2 class="text-2xl text-blue-4 inline-block">Популярнi автори</h2>
-      <p class="text-blue-1 cursor-pointer">Бiльше</p>
-    </div>
-    <div class="py-6">
-      <div class="grid grid-cols-10 gap-4">
-        <div>
-          <img
-              @click="viewBook"
-              src="@/assets/images/2021-03-10_08-54.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-10_09-04.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-10_09-05.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-10_09-06.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-10_09-06.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-10_08-54.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-10_09-04.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-10_09-05.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-10_09-06.png" alt="">
-        </div>
-        <div>
-          <img src="@/assets/images/2021-03-10_09-06.png" alt="">
-        </div>
-      </div>
-    </div>
+<!--    <div class="pt-10 flex justify-between items-center">-->
+<!--      <h2 class="text-2xl text-blue-4 inline-block">Популярнi жанри</h2>-->
+<!--      <p class="text-blue-1 cursor-pointer">Бiльше</p>-->
+<!--    </div>-->
+<!--    <div class="py-6">-->
+<!--      <div class="grid grid-cols-6 gap-4">-->
+<!--        <div v-for="(genre, index) in genres" :key="index">-->
+<!--          <p-->
+<!--              :style="{background: randomColor[index]}"-->
+<!--              class="py-5 text-white"-->
+<!--          >{{ genre }}</p>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="pt-10 flex justify-between items-center">-->
+<!--      <h2 class="text-2xl text-blue-4 inline-block">Популярнi автори</h2>-->
+<!--      <p class="text-blue-1 cursor-pointer">Бiльше</p>-->
+<!--    </div>-->
+<!--    <div class="py-6">-->
+<!--      <div class="grid grid-cols-10 gap-4">-->
+<!--        <div>-->
+<!--          <img-->
+<!--              @click="viewBook"-->
+<!--              src="@/assets/images/2021-03-10_08-54.png" alt="">-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
 <script>
-import VueSimpleSuggest from 'vue-simple-suggest'
 import 'vue-simple-suggest/dist/styles.css'
-import axios from 'axios'
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import 'swiper/css/swiper.css'
+import Cover from '@/components/Cover.vue';
 
 export default {
   components: {
-    VueSimpleSuggest
+    Swiper,
+    SwiperSlide,
+    Cover
   },
   data() {
     return {
-      links: [
-        {url: 'home', title: 'Головна'},
-        {url: 'books', title: 'Книжки'}
-      ],
-      genres: [
-        'Iсторичнi',
-        'Детективи',
-        'Художня',
-        'Готична',
-        'Автобіографічнi',
-        'Пригодницькi'
-      ],
-      randomColor: [
-        '#3183CE',
-        '#21A28E',
-        '#7C4CAB',
-        '#6FB742',
-        '#AB4C4C',
-        '#7A9346'
-      ],
+      books: null,
+      swiperOption: {
+        slidesPerView: 6,
+        spaceBetween: 30,
+        slidesPerGroup: 1,
+        loop: true,
+        loopFillGroupWithBlank: true,
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: false
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        }
+      },
       model: '',
       selected: {
         product_name: null,
         id: null
       },
+      getList: '',
       foundText: null,
       loading: true
     }
   },
+  mounted() {
+    this.fetchData()
+  },
   methods: {
-    viewBook() {
-      this.$router.push({ name: 'book', params: {id: 1} })
-    },
-    getList(inputValue) {
-      return new Promise((resolve, reject) => {
-        axios.get('/admin/cabinet/search-product', {
-          params: {
-            searchValue: inputValue,
-            lang_id: 1
-          }
-        })
-            .then(response => {
-              const result = response.data.data
-              this.foundText = result
-              resolve(result)
-            })
-            .catch(error => {
-              this.loading = false
-              reject(error)
-            })
-      })
-    },
-    onSuggestSelect(suggest) {
-      this.selected = suggest
-    },
-    boldenSuggestion(scope) {
-      if (!scope) return scope
-      const {suggestion, query} = scope
-      const result = this.$refs.suggestComponent.displayProperty(suggestion)
-      if (!query) {
-        return result
-      }
-      const texts = query.split(/[\s-_/\\|.]/gm).filter(t => !!t) || ['']
-
-      if (typeof result === 'string') {
-        return result.replace(new RegExp(`(.*?)(${texts.join('|')})(.*?)`, 'gi'), '$1<b>$2</b>$3')
+    async fetchData() {
+      try {
+        const url = `https://ebook.unltd.ws/api/lib/main`
+        const response = await this.$http.get(url)
+        this.books = response.data.data.list
+      } catch (err) {
+        if (err.response) {
+          // client received an error response (5xx, 4xx)
+          console.log("Server Error:", err)
+        } else if (err.request) {
+          // client never received a response, or request never left
+          console.log("Network Error:", err)
+        } else {
+          console.log("Client Error:", err)
+        }
       }
     },
   }
