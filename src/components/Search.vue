@@ -39,12 +39,10 @@
 
 <script>
 export default {
-  name: "Header",
+  name: "Search",
   methods: {
     searchBooks(event) {
-      const querySearch = event.target.value
-      this.$router.push({ name: 'search', params: {query: querySearch} })
-      console.log(event.target.value)
+      this.$emit('search-value', event.target.value)
     },
   }
 }

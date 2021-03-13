@@ -1,5 +1,8 @@
 <template>
   <div>
+    <Search
+      @search-value="search"
+    />
     <div v-if="isLoadedData">
       <div class="py-6" v-for="(row, index) in books" :key="index">
         <h2 class="text-2xl text-blue-4 text-left pb-2">{{  row.name | capitalize }}</h2>
@@ -30,10 +33,12 @@ import 'vue-simple-suggest/dist/styles.css'
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
 import Cover from '@/components/Cover.vue';
-import Loader from "@/components/Loader";
+import Loader from "@/components/Loader.vue";
+import Search from "@/components/Search.vue";
 
 export default {
   components: {
+    Search,
     Swiper,
     SwiperSlide,
     Cover,
@@ -95,13 +100,8 @@ export default {
         default: this.swiperOption.slidesPerView = 6
       }
     },
-    searchBooks(event) {
-      const querySearch = event.target.value
-      this.$router.push({ name: 'search', params: {query: querySearch} })
-      console.log(event.target.value)
-    },
     handleClickSlide(id) {
-      this.$router.push({ name: 'book', params: {id: id} })
+      this.$router.push({ name: 'book', params: {id} })
     },
     async fetchData() {
       try {
@@ -122,6 +122,9 @@ export default {
         this.isLoadedData = true
       }
     },
+    search(value) {
+      this.$router.push({ name: 'search', params: {query: value} })
+    }
   }
 }
 

@@ -6,6 +6,7 @@ module.exports = {
     },
     gridTemplateColumns: {
       '3auto': '1fr 1fr 1fr',
+      '2auto': '1fr 1fr',
     },
     textColor: {
       'white': '#FFFFFF',

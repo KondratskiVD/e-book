@@ -18,19 +18,14 @@ const router = new Router({
       component: () => import('./views/pages/Home/Index.vue')
     },
     {
-      path: '/books',
-      name: 'books',
-      component: () => import('./views/pages/Books/Index.vue')
-    },
-    {
       path: '/book/:id',
       name: 'book',
-      component: () => import('./views/pages/Books/Book.vue')
+      component: () => import('./views/pages/Books/Index.vue')
     },
     {
       path: '/search/:query',
       name: 'search',
-      component: () => import('./views/pages/Search/Index.vue')
+      component: () => import('./views/pages/Result/Index.vue')
     },
   ]
 })
