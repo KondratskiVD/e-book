@@ -4,6 +4,9 @@ module.exports = {
   theme: {
     color: {
     },
+    gridTemplateColumns: {
+      '3auto': '1fr 1fr 1fr',
+    },
     textColor: {
       'white': '#FFFFFF',
       'icon': '#AEADC3',
@@ -12,12 +15,14 @@ module.exports = {
       'blue-1': '#8E8AD3',
       'dark': '#414141',
       'pink': '#FE9780',
+      'red-1': '#ff0e46',
       'grey-4': '#A7AFBA',
       'green-1': '#21A28E'
     },
     backgroundColor: {
       'blue-1': '#E3F4F2',
       'green-1': '#21A28E',
+      'red-1': '#fdbaca',
       'bg-white': '#FFFFFF'
     },
     fontSize: {

@@ -1,11 +1,12 @@
 <template>
-  <div id="cover" @click="handleClickSlide(description.id)" ref="description.id">
-    <div v-if="cover === 1" class="cover bg-1">
+  <div id="cover">
+    <div v-if="cover === 1"
+         :class="height"
+         class="cover bg-1">
       <div v-if="description">
         <div class="description">
           <div class="w-99">
             <h1><b>{{ description.title }}</b></h1>
-            {{ description.id }}
             <h3>{{ description.author ? description.author.name : '' }}</h3>
           </div>
         </div>
@@ -25,7 +26,9 @@
         </div>
       </div>
     </div>
-    <div v-if="cover === 2" class="cover bg-2">
+    <div v-if="cover === 2"
+         :class="height"
+         class="cover bg-2">
       <div v-if="description">
         <div class="description-2">
           <div class="w-99">
@@ -50,7 +53,9 @@
         </div>
       </div>
     </div>
-    <div v-if="cover === 3" class="cover bg-3">
+    <div v-if="cover === 3"
+         :class="height"
+         class="cover bg-3">
       <div v-if="description">
         <div class="description">
           <div class="w-99">
@@ -74,7 +79,9 @@
         </div>
       </div>
     </div>
-    <div v-if="cover === 4" class="cover bg-4">
+    <div v-if="cover === 4"
+         :class="height"
+         class="cover bg-4">
       <div v-if="description">
         <div class="description-4">
           <div class="w-99">
@@ -155,11 +162,19 @@
 </template>
 
 <script>
-import htmlToImage from 'html-to-image';
 
 export default {
   name: "Cover",
-  props: ['description'],
+  props: {
+    description: {
+      type: Object,
+      default: () => {}
+    },
+    height: {
+      type: String,
+      default: ''
+    },
+  },
   data() {
     return {
       image: null,
@@ -168,54 +183,8 @@ export default {
   computed: {
     cover() {
       return Math.floor(Math.random() * Math.floor(4)) + 1
-    }
-  },
-  updated() {
-    // this.getImage();
-  },
-  mounted() {
-    // this.getImage();
-  },
-  methods: {
-    handleClickSlide(id) {
-      this.$router.push({ name: 'book', params: {id: id} })
     },
-    getImage() {
-      // let test = document.getElementById('cover')
-      // htmlToImage.toPng(test)
-      //     .then((dataUrl) => {
-      //         // let img = new Image();
-      //         // img.src = dataUrl;
-      //         // document.body.appendChild(img);
-      //         // console.log(dataUrl);
-      //         // $('#cover .cover').html(img);
-      //         // $('#cover').addClass('cover-new');
-      //         this.$emit('image',dataUrl);
-      //
-      //     })
-      //     .catch(function (error) {
-      //         console.error('oops, something went wrong!', error);
-      //     });
-
-      htmlToImage.toBlob(document.getElementById('cover'))
-          .then((blob) => {
-            this.image = URL.createObjectURL(blob);
-            this.$emit('image', blob);
-          });
-
-
-      // this.$nextTick(()=>{
-      //     this.$emit('image', {img:img});
-      // })
-      // htmlToImage.toJpeg(document.getElementById('cover'), { quality: 0.95 })
-      //     .then(function (dataUrl) {
-      //         var link = document.createElement('a');
-      //         link.download = 'my-image-name.jpeg';
-      //         link.href = dataUrl;
-      //         link.click();
-      //     });
-    }
-  }
+  },
 }
 </script>
 
@@ -276,7 +245,6 @@ export default {
   background-size: cover;
   text-align: left;
   position: relative;
-  height: 250px;
   width: 100%;
   border: #AEADC3 1px solid;
   -webkit-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
@@ -392,5 +360,10 @@ h3 {
 .author {
   background-color: #F5F7FA;
 }
-
+.h-250 {
+  height: 250px;
+}
+.h-450 {
+  height: 450px;
+}
 </style>

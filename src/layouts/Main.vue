@@ -1,15 +1,16 @@
 <template>
   <div class="max-w-screen-xl m-auto px-5">
+    <Header/>
     <router-view/>
   </div>
 </template>
 
 <script>
-// import Home from '@/views/pages/Home/Index.vue'
 
+import Header from "@/components/Header";
 export default {
   components: {
-
+    Header
   },
   data () {
     return {
