@@ -29,12 +29,11 @@
 </template>
 
 <script>
-import 'vue-simple-suggest/dist/styles.css'
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
-import Cover from '@/components/Cover.vue';
-import Loader from "@/components/Loader.vue";
-import Search from "@/components/Search.vue";
+import Cover from '@/components/Cover.vue'
+import Loader from '@/components/Loader.vue'
+import Search from '@/components/Search.vue'
 
 export default {
   components: {
@@ -44,7 +43,7 @@ export default {
     Cover,
     Loader
   },
-  data() {
+  data () {
     return {
       books: null,
       isLoadedData: false,
@@ -63,67 +62,54 @@ export default {
           prevEl: '.swiper-button-prev'
         }
       },
-      selected: {
-        product_name: null,
-        id: null
-      },
-      getList: '',
-      foundText: null,
-      loading: true,
       window: {
-        width: 0,
-      },
+        width: 0
+      }
     }
   },
-  mounted() {
-    this.fetchData();
+  mounted () {
+    this.fetchData()
   },
-  created() {
-    window.addEventListener('resize', this.handleResize);
-    this.handleResize();
+  created () {
+    window.addEventListener('resize', this.handleResize)
+    this.handleResize()
   },
-  destroyed() {
-    window.removeEventListener('resize', this.handleResize);
+  destroyed () {
+    window.removeEventListener('resize', this.handleResize)
   },
   methods: {
-    handleResize() {
-      this.window.width = window.innerWidth;
+    handleResize () {
+      this.window.width = window.innerWidth
       switch (true) {
-        case (this.window.width <= 320) : this.swiperOption.slidesPerView = 1;
-        break;
-        case (this.window.width <= 530) : this.swiperOption.slidesPerView = 2
-        break;
-        case (this.window.width <= 768) : this.swiperOption.slidesPerView = 3
-          break;
-        case (this.window.width <= 1024) : this.swiperOption.slidesPerView = 4
-          break;
-        default: this.swiperOption.slidesPerView = 6
+      case (this.window.width <= 320) : this.swiperOption.slidesPerView = 1
+        break
+      case (this.window.width <= 530) : this.swiperOption.slidesPerView = 2
+        break
+      case (this.window.width <= 768) : this.swiperOption.slidesPerView = 3
+        break
+      case (this.window.width <= 1024) : this.swiperOption.slidesPerView = 4
+        break
+      default: this.swiperOption.slidesPerView = 6
       }
     },
-    handleClickSlide(id) {
+    handleClickSlide (id) {
       this.$router.push({ name: 'book', params: {id} })
     },
-    async fetchData() {
+    async fetchData () {
       try {
-        const url = `api/lib/main`
+        const url = 'api/lib/main'
         const response = await this.$http.get(url)
         this.books = response.data.data.list
         this.isLoadedData = true
       } catch (err) {
         if (err.response) {
-          // client received an error response (5xx, 4xx)
-          console.log("Server Error:", err)
-        } else if (err.request) {
-          // client never received a response, or request never left
-          console.log("Network Error:", err)
-        } else {
-          console.log("Client Error:", err)
+          console.log('Server Error:', err)
         }
         this.isLoadedData = true
       }
     },
-    search(value) {
-      this.$router.push({ name: 'search', params: {query: value} })
+    search () {
+      this.$router.push({ name: 'search' })
     }
   }
 }

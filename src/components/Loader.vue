@@ -1,12 +1,15 @@
 <template>
   <div class="spinner flex justify-center items-center fixed">
-    <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-red" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
   </div>
 </template>
 
 <script>
 export default {
-name: "Loader"
+  name: 'Loader'
 }
 </script>
 
@@ -16,20 +19,5 @@ name: "Loader"
     height: 100vh;
     left: 0;
     top: 0
-  }
-  .loader {
-    border-top-color: #9082C9;
-    -webkit-animation: spinner 1.5s linear infinite;
-    animation: spinner 1.5s linear infinite;
-  }
-
-  @-webkit-keyframes spinner {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-  }
-
-  @keyframes spinner {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
   }
 </style>

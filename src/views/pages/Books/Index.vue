@@ -88,49 +88,49 @@
 </template>
 
 <script>
-import Cover from '@/components/Cover.vue';
+import Cover from '@/components/Cover.vue'
 import StarRating from 'vue-star-rating'
-import Loader from "@/components/Loader";
-import Search from "@/components/Search";
+import Loader from '@/components/Loader'
+import Search from '@/components/Search'
 export default {
-  name: "Book",
+  name: 'Book',
   components: {
     Search,
     StarRating,
     Cover,
     Loader
   },
-  data() {
+  data () {
     return {
       isLoadedData: false,
       bookmark: 'none',
       book: null,
       window: {
-        width: 0,
+        width: 0
       },
       height: ''
     }
   },
-  mounted() {
+  mounted () {
     this.fetchData()
   },
-  created() {
-    window.addEventListener('resize', this.handleResize);
-    this.handleResize();
+  created () {
+    window.addEventListener('resize', this.handleResize)
+    this.handleResize()
   },
-  destroyed() {
-    window.removeEventListener('resize', this.handleResize);
+  destroyed () {
+    window.removeEventListener('resize', this.handleResize)
   },
   methods: {
-    handleResize() {
-      this.window.width = window.innerWidth;
+    handleResize () {
+      this.window.width = window.innerWidth
       switch (true) {
-        case (this.window.width <= 1024) : this.height = 'h-250';
-          break;
-        default: this.height = 'h-450'
+      case (this.window.width <= 1024) : this.height = 'h-250'
+        break
+      default: this.height = 'h-450'
       }
     },
-    fetchData() {
+    fetchData () {
       const bookId = this.$route.params.id
       console.log(bookId)
       const url = `api/lib/books/${bookId}`
@@ -144,8 +144,8 @@ export default {
           this.isLoadedData = true
         })
     },
-    transformData(data) {
-      return{
+    transformData (data) {
+      return {
         title: data.title ?? 'Немає назви',
         isbn: data.isbn[0]?.name ?? 'Немає ISBN',
         author: data.author?.name ?? 'Немає автора',
@@ -157,10 +157,10 @@ export default {
     goBack () {
       this.$router.back()
     },
-    search(value) {
+    search (value) {
       this.$router.push({ name: 'search', params: {query: value} })
     }
-  },
+  }
 }
 </script>
 

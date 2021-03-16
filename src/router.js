@@ -23,7 +23,7 @@ const router = new Router({
       component: () => import('./views/pages/Books/Index.vue')
     },
     {
-      path: '/search/:query',
+      path: '/search',
       name: 'search',
       component: () => import('./views/pages/Result/Index.vue')
     },

@@ -1,10 +1,11 @@
 <template>
   <div>
     <Search
+      :total="total"
       @search-value="search"
     />
     <div v-if="isLoadedData">
-      <div class="flex justify-between items-center mt-6">
+      <div class="flex justify-betwesearch-valueen items-center mt-6">
         <p class="text-blue-1 cursor-pointer">
         <span class="flex justify-end items-center text-icon p-2">
           <svg xmlns="http://www.w3.org/2000/svg"
@@ -55,9 +56,9 @@
 </template>
 
 <script>
-import Cover from '@/components/Cover.vue';
-import Loader from "@/components/Loader";
-import Search from "@/components/Search";
+import Cover from '@/components/Cover.vue'
+import Loader from '@/components/Loader'
+import Search from '@/components/Search'
 
 export default {
   name: 'Result',
@@ -66,88 +67,94 @@ export default {
     Cover,
     Loader
   },
-  data() {
+  data () {
     return {
-      books: null,
+      books: [],
       isLoadedData: false,
       loadingNextData: false,
       last_page: null,
-      current_page: null
+      current_page: null,
+      total: null
     }
   },
-  beforeMount() {
+  computed: {
+    getSearchParams () {
+      return this.$store.state.searchParams
+    }
+  },
+  beforeMount () {
     this.fetchData()
   },
-  mounted() {
+  mounted () {
     this.scroll()
   },
   methods: {
-    handleClickSlide(id) {
-      this.$router.push({ name: 'book', params: {id: id} })
+    handleClickSlide (id) {
+      this.$router.push({ name: 'book', params: {id} })
     },
-    async fetchData(s = null) {
+    async fetchData () {
       this.isLoadedData = false
       try {
-        const url = `api/lib/search`
-        const query = s || this.$route.params.query
-        const response = await this.$http.get(url, {params : {s: query}})
+        const url = 'api/lib/search'
+        const response = await this.$http.get(url, { params : { ...this.getSearchParams }})
+
         this.books = this.transformData(response.data.data.items)
         this.last_page = response.data.data.last_page
         this.current_page = response.data.data.current_page
+        this.total = response.data.data.total
         this.isLoadedData = true
       } catch (err) {
         if (err.response) {
           // client received an error response (5xx, 4xx)
-          console.log("Server Error:", err)
+          console.log('Server Error:', err)
         } else if (err.request) {
           // client never received a response, or request never left
-          console.log("Network Error:", err)
+          console.log('Network Error:', err)
         } else {
-          console.log("Client Error:", err)
+          console.log('Client Error:', err)
         }
         this.isLoadedData = true
       }
     },
-    fetchNextData() {
+    fetchNextData () {
       this.loadingNextData = true
-      const url = `api/lib/search`
+      const url = 'api/lib/search'
       const query = this.$route.params.query
       const page = ++this.current_page
       this.$http.get(url, {params : {s: query, page}})
-          .then((response) => {
-            const transformedData = this.transformData(response.data.data.items)
-            this.books = this.books.concat(transformedData)
-            this.loadingNextData = false
-          })
-          .catch((error) => {
-            console.error(error)
-            this.loadingNextData = false
-          })
+        .then((response) => {
+          const transformedData = this.transformData(response.data.data.items)
+          this.books = this.books.concat(transformedData)
+          this.loadingNextData = false
+        })
+        .catch((error) => {
+          console.error(error)
+          this.loadingNextData = false
+        })
     },
     scroll () {
       window.onscroll = () => {
-        let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
-        console.log(window.innerHeight === document.documentElement.offsetHeight)
+        const bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
         if (bottomOfWindow && this.last_page > this.current_page) {
           this.fetchNextData()
         }
       }
     },
-    transformData(data) {
+    transformData (data) {
       return data.map(book => ({
         title: book.description.title ?? 'Немає назви',
         isbn: book.description.isbn[0]?.name ?? 'Немає ISBN',
         author: book.description.author?.name ?? 'Немає автора',
         description: book.description,
         id: book.description.id
-        })
+      })
       )
     },
     goBack () {
       this.$router.back()
     },
-    search(value) {
-      this.fetchData(value)
+    search () {
+      this.fetchData()
     }
   }
 }

@@ -242,7 +242,7 @@ export default {
 }
 
 .cover {
-  background-size: cover;
+  background-size: 100% 100%;
   text-align: left;
   position: relative;
   width: 100%;
@@ -319,25 +319,25 @@ h3 {
 }
 
 .isbn {
-  font-size: 14px;
+  font-size: 11px;
   position: absolute;
-  bottom: 5%;
+  bottom: 10%;
   left: 5%;
   font-family: AvenirNext-Regular;
   white-space: nowrap;
 }
 
 .isbn-3 {
-  font-size: 14px;
+  font-size: 11px;
   position: absolute;
-  bottom: 5%;
+  bottom: 10%;
   left: 8%;
 }
 
 .isbn-4 {
-  font-size: 14px;
+  font-size: 11px;
   position: absolute;
-  bottom: 5%;
+  bottom: 10%;
   left: 8%;
 }
 
