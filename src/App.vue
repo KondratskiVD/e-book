@@ -11,10 +11,10 @@ export default {
   name: 'App',
   components: {
     Main
-  },
-  async created () {
-    auth.init()
   }
+  // async created () {
+  //   auth.init()
+  // }
 }
 </script>
 

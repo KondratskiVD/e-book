@@ -7,9 +7,9 @@
         pattern="\w+"
         v-model="model"
         :list="getList"
-        :max-suggestions="5"
-        :min-length="1"
-        :debounce="0"
+        :max-suggestions="10"
+        :min-length="minLength"
+        :debounce="1000"
         :filter-by-query="false"
         :prevent-submit="true"
         :controls="{
@@ -24,10 +24,12 @@
         value-attribute="id"
         display-attribute="name"
         @select="onSuggestSelect"
-        @blur="checkWhenBlur"
     >
       <div class="g relative">
-        <input type="text" :placeholder="fields.placeholder" v-model="model">
+        <input
+            v-on:keyup.delete="deleteField"
+            type="text"
+            v-model="model">
         <span v-if="loading" class="suggest_mini-spinner absolute">
           <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-red" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -71,13 +73,13 @@ export default {
       type: Object,
       default: () => {}
     },
-    btnClickHandler: {
-
+    minLength: {
+      type: Number,
+      default: 0
     }
   },
   data () {
     return {
-      chosen: '',
       selected: {
         name: null,
         id: null
@@ -90,16 +92,19 @@ export default {
     }
   },
   computed: {
-    ...mapState(['searchWords']),
+    ...mapState(['searchWords', 'searchParams']),
     getSearchWords () {
       return this.$store.state.searchWords
+    },
+    getSearchParams () {
+      return this.$store.state.searchParams
     }
   },
-  mounted () {
+  created () {
     this.model = this.getSearchWords[this.fields.keyWord]
   },
   methods: {
-    checkWhenBlur () {
+    deleteField () {
       if (!this.model) {
         this.clearValue()
       }
@@ -108,7 +113,7 @@ export default {
       this.selected = suggest
       this.changeValue(suggest)
     },
-    clearValue (word) {
+    clearValue () {
       this.$emit('filtered', {
         key: this.fields.keyWord,
         name: null,
@@ -159,7 +164,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .vue-simple-suggest.designed .input-wrapper input , .vue-simple-suggest.designed.focus .input-wrapper input {
   border: 0;
   border-bottom: 1px solid #CCCCCC;

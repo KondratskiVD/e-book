@@ -5,7 +5,7 @@
       @search-value="search"
     />
     <div v-if="isLoadedData">
-      <div class="flex justify-betwesearch-valueen items-center mt-6">
+      <div class="flex justify-between items-center mt-6">
         <p class="text-blue-1 cursor-pointer">
         <span class="flex justify-end items-center text-icon p-2">
           <svg xmlns="http://www.w3.org/2000/svg"
@@ -27,13 +27,13 @@
         <div v-for="(book, index) in books" :key="index">
           <div
               @click="handleClickSlide(book.id)"
-              class="flex item-book">
+              class="flex item-book mb-4">
             <Cover
-                class="w-1/2 view-book"
-                :height="'h-250'"
+                class="md:w-1/2"
+                :computed-class-width="computedClassWidth"
               :description="book.description"/>
-            <div class="book-text ml-5 text-left w-1/2">
-              <p class="text-xl">{{book.title}}</p>
+            <div class="book-text ml-5 text-left md:w-1/2">
+              <p class="md:text-xl">{{book.title}}</p>
               <p class="text-grey-4 mt-6">ISBN: {{  book.isbn }}</p>
               <p class="mt-6">{{  book.author}}</p>
             </div>
@@ -46,8 +46,11 @@
         <p class="text-left pt-12 text-xl">Нiчого не знайдено</p>
       </div>
       <div v-if="loadingNextData">
-        <div class="spinner flex justify-center items-center py-12">
-          <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+        <div class="spinner flex justify-center items-center py-16">
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-red" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
         </div>
       </div>
     </div>
@@ -59,9 +62,11 @@
 import Cover from '@/components/Cover.vue'
 import Loader from '@/components/Loader'
 import Search from '@/components/Search'
+import resizeCoverMixin from '@/mixins/resizeCoverMixin'
 
 export default {
   name: 'Result',
+  mixins: [resizeCoverMixin],
   components: {
     Search,
     Cover,
@@ -96,22 +101,20 @@ export default {
       this.isLoadedData = false
       try {
         const url = 'api/lib/search'
-        const response = await this.$http.get(url, { params : { ...this.getSearchParams }})
-
-        this.books = this.transformData(response.data.data.items)
-        this.last_page = response.data.data.last_page
-        this.current_page = response.data.data.current_page
-        this.total = response.data.data.total
+        const searchParams = this.transformParams(this.getSearchParams)
+        const response = await this.$http.get(url, { params : { ...searchParams }})
+        if (response.data.data.items.length > 0) {
+          this.books = this.transformData(response.data.data.items)
+          this.last_page = response.data.data.last_page
+          this.current_page = response.data.data.current_page
+          this.total = response.data.data.total
+        } else {
+          this.books = []
+        }
         this.isLoadedData = true
       } catch (err) {
         if (err.response) {
-          // client received an error response (5xx, 4xx)
           console.log('Server Error:', err)
-        } else if (err.request) {
-          // client never received a response, or request never left
-          console.log('Network Error:', err)
-        } else {
-          console.log('Client Error:', err)
         }
         this.isLoadedData = true
       }
@@ -119,9 +122,8 @@ export default {
     fetchNextData () {
       this.loadingNextData = true
       const url = 'api/lib/search'
-      const query = this.$route.params.query
       const page = ++this.current_page
-      this.$http.get(url, {params : {s: query, page}})
+      this.$http.get(url, {params : {...this.getSearchParams, page}})
         .then((response) => {
           const transformedData = this.transformData(response.data.data.items)
           this.books = this.books.concat(transformedData)
@@ -150,6 +152,20 @@ export default {
       })
       )
     },
+    transformParams (data) {
+      const searchParams = {}
+      const searchEntries = Object.entries(data)
+      for (const [key, value] of searchEntries) {
+        if (value !== null) {
+          if (key !== 'authors') {
+            searchParams[key] = value
+          } else {
+            searchParams['author'] = value
+          }
+        }
+      }
+      return searchParams
+    },
     goBack () {
       this.$router.back()
     },
@@ -166,28 +182,10 @@ export default {
   position: absolute;
   left: 10px;
 }
-.view-book {
-  width: 190px;
-}
-@media screen and (max-width: 450px) {
-  .item-book {
-    flex-direction: column;
-  }
-  .book-text {
-    margin-left: 0;
-    margin-top: 20px;
-    margin-bottom: 50px;
-  }
-}
 .spinner {
   width: 100%;
   left: 0;
   bottom: 0
-}
-.loader {
-  border-top-color: #9082C9;
-  -webkit-animation: spinner 1.5s linear infinite;
-  animation: spinner 1.5s linear infinite;
 }
 
 @-webkit-keyframes spinner {

@@ -7,17 +7,7 @@
 <script>
 
 export default {
-  name: 'mainLayout',
-  components: {
-  },
-  data () {
-    return {
-
-    }
-  },
-  methods: {
-
-  }
+  name: 'mainLayout'
 }
 
 </script>

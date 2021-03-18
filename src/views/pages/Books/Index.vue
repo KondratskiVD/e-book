@@ -24,14 +24,14 @@
         <div class="grid-item item1">
           <div>
             <Cover
-              :height="height"
-              :key="height"
-              class="view-book"
+              :computed-class-width="computedClassWidth"
+              :key="computedClassWidth"
+              class="view-book pr-4"
               :description="book"/>
           </div>
         </div>
         <div class="grid-item item2">
-          <p class="text-3xl">{{book.title}}</p>
+          <p class="md:text-3xl">{{book.title}}</p>
           <p class="text-grey-4 mt-6">ISBN: {{  book.isbn }}</p>
           <p class="mt-6">{{  book.author}}</p>
         </div>
@@ -92,8 +92,10 @@ import Cover from '@/components/Cover.vue'
 import StarRating from 'vue-star-rating'
 import Loader from '@/components/Loader'
 import Search from '@/components/Search'
+import resizeCoverMixin from '@/mixins/resizeCoverMixin'
 export default {
   name: 'Book',
+  mixins: [resizeCoverMixin],
   components: {
     Search,
     StarRating,
@@ -104,35 +106,15 @@ export default {
     return {
       isLoadedData: false,
       bookmark: 'none',
-      book: null,
-      window: {
-        width: 0
-      },
-      height: ''
+      book: null
     }
   },
   mounted () {
     this.fetchData()
   },
-  created () {
-    window.addEventListener('resize', this.handleResize)
-    this.handleResize()
-  },
-  destroyed () {
-    window.removeEventListener('resize', this.handleResize)
-  },
   methods: {
-    handleResize () {
-      this.window.width = window.innerWidth
-      switch (true) {
-      case (this.window.width <= 1024) : this.height = 'h-250'
-        break
-      default: this.height = 'h-450'
-      }
-    },
     fetchData () {
       const bookId = this.$route.params.id
-      console.log(bookId)
       const url = `api/lib/books/${bookId}`
       this.$http.get(url)
         .then((response) => {
@@ -175,10 +157,6 @@ export default {
   padding: 10px;
 }
 
-.grid-item {
-  padding: 20px;
-}
-
 .item1 {
   grid-column: 1/2;
   grid-row: 1/4;
@@ -198,7 +176,6 @@ export default {
 }
 @media screen and (max-width: 1024px) {
   .view-book {
-    height: 250px !important;
     width: 190px;
   }
 }
@@ -210,7 +187,6 @@ export default {
       grid-column: 1/2;
       grid-row: 1/2;
     }
-
     .item2 {
       grid-column: 2/3;
       grid-row: 1/2;
@@ -226,9 +202,11 @@ export default {
     }
 }
 @media screen and (max-width: 450px) {
-  .grid-container {
-    display: flex;
-    flex-direction: column;
+  .item2 {
+    overflow: hidden;
+  }
+  .view-book {
+    width: 120px;
   }
 }
 

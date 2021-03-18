@@ -54,6 +54,7 @@
           <SelectSuggest
               @filtered="onFiltered"
               :fields="REQUEST_FILTER_FIELDS.AUTHORS"
+              :min-length="2"
               :key="getSearchParams[REQUEST_FILTER_FIELDS.AUTHORS.keyWord]"
               class="filter-item"
           />
@@ -71,8 +72,8 @@
           />
           <SelectSuggest
               @filtered="onFiltered"
-              :defaultDate="defaultDateFrom"
               :fields="REQUEST_FILTER_FIELDS.PUBLISHERS"
+              :min-length="2"
               :key="getSearchParams[REQUEST_FILTER_FIELDS.PUBLISHERS.keyWord]"
               class="filter-item"
           />
@@ -99,7 +100,7 @@
             <div></div>
             <datepicker
               v-model="defaultDateTo"
-              class="w-28"
+              class="w-28 right-datepicker"
               placeholder="дата до"
               minimum-view="year"
               @selected="selectDateTo"
@@ -130,13 +131,10 @@ import REQUEST_FILTER_FIELDS, {
 import { CollapseTransition } from '@ivanv/vue-collapse-transition'
 import SelectSuggest from '@/components/SelectSuggest'
 import Datepicker from 'vuejs-datepicker'
-import searchFilterMixin from '@/mixins/searchFilterMixin'
 import {mapState} from 'vuex'
-import moment from 'moment'
 
 export default {
   name: 'Search',
-  mixins: [searchFilterMixin],
   props: {
     total: {
       default: 0
@@ -161,7 +159,6 @@ export default {
   },
   mounted () {
     this.query = this.getSearchParams.s
-    console.log(typeof this.getSearchParams.date_from)
     this.defaultDateFrom = new Date(String(this.getSearchParams.date_from ?? '2000'))
     this.defaultDateTo = new Date(String(this.getSearchParams.date_to ?? '2020'))
   },
@@ -174,6 +171,7 @@ export default {
       this.$store.commit(SET_FILTER_PARAMS, data)
     },
     searchBooksByFilter () {
+      this.$store.commit(SET_QUERY_WORD, {s: this.query})
       this.$emit('search-value')
     },
     searchBooks (event) {

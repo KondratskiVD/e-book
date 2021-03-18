@@ -1,7 +1,8 @@
 <template>
   <div id="cover">
     <div v-if="cover === 1"
-         :class="height"
+         v-bind:style="sliderWidth"
+         :class="computedClassWidth"
          class="cover bg-1">
       <div v-if="description">
         <div class="description">
@@ -27,7 +28,8 @@
       </div>
     </div>
     <div v-if="cover === 2"
-         :class="height"
+         v-bind:style="sliderWidth"
+         :class="computedClassWidth"
          class="cover bg-2">
       <div v-if="description">
         <div class="description-2">
@@ -54,7 +56,8 @@
       </div>
     </div>
     <div v-if="cover === 3"
-         :class="height"
+         v-bind:style="sliderWidth"
+         :class="computedClassWidth"
          class="cover bg-3">
       <div v-if="description">
         <div class="description">
@@ -80,7 +83,8 @@
       </div>
     </div>
     <div v-if="cover === 4"
-         :class="height"
+         v-bind:style="sliderWidth"
+         :class="computedClassWidth"
          class="cover bg-4">
       <div v-if="description">
         <div class="description-4">
@@ -164,27 +168,37 @@
 <script>
 
 export default {
-  name: "Cover",
+  name: 'Cover',
   props: {
     description: {
       type: Object,
       default: () => {}
     },
-    height: {
+    computedClassWidth: {
       type: String,
       default: ''
     },
+    isSlider:{
+      type: Boolean,
+      default: false
+    }
   },
-  data() {
+  data () {
     return {
-      image: null,
+      image: null
     }
   },
   computed: {
-    cover() {
+    cover () {
       return Math.floor(Math.random() * Math.floor(4)) + 1
     },
-  },
+    sliderWidth () {
+      if (this.isSlider) {
+        return {width: '100%'}
+      }
+      return ''
+    }
+  }
 }
 </script>
 
@@ -228,28 +242,21 @@ export default {
 /*  background-image: url("../assets/images/cover-6.png");*/
 /*}*/
 
-.cover-new {
-  height: auto;
-  width: 100%;
-  /*zoom:41%;*/
-}
-
 #cover {
   /*width: 490px;*/
   /*z-index: -1;*/
   /*position:relative;*/
   cursor: pointer;
 }
-
 .cover {
   background-size: 100% 100%;
   text-align: left;
   position: relative;
-  width: 100%;
   border: #AEADC3 1px solid;
   -webkit-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
   -moz-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
   box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
+  overflow: hidden;
 }
 
 h1 {
@@ -313,11 +320,6 @@ h3 {
   color: black !important;
   font-family: TTNormsPro-MediumItalic;
 }
-
-.w-99 {
-  width: 99%;
-}
-
 .isbn {
   font-size: 11px;
   position: absolute;
@@ -360,10 +362,12 @@ h3 {
 .author {
   background-color: #F5F7FA;
 }
+.h-170 {
+  height: 170px;
+  width: 115px;
+}
 .h-250 {
   height: 250px;
-}
-.h-450 {
-  height: 450px;
+  width: 190px;
 }
 </style>

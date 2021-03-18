@@ -14,7 +14,8 @@
           <swiper-slide v-for="(book, index) in row.descriptions" :key="index">
             <div @click="handleClickSlide(book.id)">
               <Cover
-                  :height="'h-250'"
+                  :computed-class-width="computedClassWidth"
+                  :is-slider="true"
                   :description="book"/>
             </div>
           </swiper-slide>
@@ -34,6 +35,7 @@ import 'swiper/css/swiper.css'
 import Cover from '@/components/Cover.vue'
 import Loader from '@/components/Loader.vue'
 import Search from '@/components/Search.vue'
+import resizeCoverMixin from '@/mixins/resizeCoverMixin'
 
 export default {
   components: {
@@ -43,6 +45,7 @@ export default {
     Cover,
     Loader
   },
+  mixins: [resizeCoverMixin],
   data () {
     return {
       books: null,
@@ -62,36 +65,12 @@ export default {
           prevEl: '.swiper-button-prev'
         }
       },
-      window: {
-        width: 0
-      }
     }
   },
   mounted () {
     this.fetchData()
   },
-  created () {
-    window.addEventListener('resize', this.handleResize)
-    this.handleResize()
-  },
-  destroyed () {
-    window.removeEventListener('resize', this.handleResize)
-  },
   methods: {
-    handleResize () {
-      this.window.width = window.innerWidth
-      switch (true) {
-      case (this.window.width <= 320) : this.swiperOption.slidesPerView = 1
-        break
-      case (this.window.width <= 530) : this.swiperOption.slidesPerView = 2
-        break
-      case (this.window.width <= 768) : this.swiperOption.slidesPerView = 3
-        break
-      case (this.window.width <= 1024) : this.swiperOption.slidesPerView = 4
-        break
-      default: this.swiperOption.slidesPerView = 6
-      }
-    },
     handleClickSlide (id) {
       this.$router.push({ name: 'book', params: {id} })
     },

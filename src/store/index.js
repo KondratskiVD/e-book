@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import REQUEST_FILTER_FIELDS, {
+import {
   SET_FILTER_PARAMS,
   SET_QUERY_WORD,
   CLEAR_FILTER_PARAMS,
@@ -15,7 +15,7 @@ export default new Vuex.Store({
   state: {
     searchParams: {
       types: null,
-      authors: null,
+      author: null,
       publishers: null,
       languages: null,
       rubrics: null,
@@ -26,7 +26,7 @@ export default new Vuex.Store({
     },
     searchWords: {
       types: null,
-      authors: null,
+      author: null,
       publishers: null,
       languages: null,
       rubrics: null,
@@ -35,9 +35,6 @@ export default new Vuex.Store({
       date_to: null,
       s: null
     }
-  },
-  getters: {
-
   },
   mutations: {
     [SET_QUERY_WORD] (state, data) {
