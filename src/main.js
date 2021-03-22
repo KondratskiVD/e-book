@@ -7,7 +7,9 @@ Vue.config.productionTip = false
 
 import axios from './axios.js'
 Vue.prototype.$http = axios
-const TOKEN = (document.querySelector('meta[name="token"]')).getAttribute("content")
+const metaElement = document.querySelector('meta[name="token"]')
+
+const TOKEN = metaElement.getAttribute("content")
 
 axios.interceptors.request.use(
   (config) => {
