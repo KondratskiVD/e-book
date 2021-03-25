@@ -5,10 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build-widjet": "vue-cli-service build --target wc --name library-widjet",
     "lint": "vue-cli-service lint",
-    "deploy-production": "vue-cli-service build --mode && rsync -avh --delete dist/ ri346267@ri346267.ftp.tools:/home/ri346267/ephemeris.store/www/dist/",
-    "deploy-widjet": "yarn build-widjet --mode && rsync -avh --delete dist/ ri346267@ri346267.ftp.tools:/home/ri346267/ephemeris.store/www/dist/"
+    "deploy-production": "vue-cli-service build --mode && rsync -avh --delete dist/ ri346267@ri346267.ftp.tools:/home/ri346267/ephemeris.store/www/dist/"
   },
   "dependencies": {
     "@ivanv/vue-collapse-transition": "^1.0.0",
