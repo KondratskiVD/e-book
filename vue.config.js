@@ -7,12 +7,12 @@ module.exports = {
   productionSourceMap: false,
   css: {
     extract: {
-      filename: 'widget.css'
+      filename: 'css/widget.css'
     }
   },
   configureWebpack: {
     output: {
-      filename: 'widget.js'
+      filename: 'js/widget.js'
     },
     plugins: [
       new webpack.optimize.LimitChunkCountPlugin({
