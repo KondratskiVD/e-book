@@ -22,41 +22,44 @@
         <p/>
       </div>
       <div
-          v-if="books.length > 0"
-          class="flex flex-col md:grid xl:grid-cols-3auto md:grid-cols-2auto gap-4 py-6">
-        <div v-for="(book, index) in books" :key="index">
-          <div
-              @click="handleClickSlide(book.id)"
-              class="flex item-book mb-4">
-            <template v-if="!book.scan_book">
-            <Cover
-                class="md:w-1/2"
-                :computed-class-width="computedClassWidth"
-              :description="book.description"/>
-            </template>
-            <template v-else>
-              <img :src="book.scan_book" :class="computedClassWidth"/>
-            </template>
-            <div class="book-text ml-5 text-left md:w-1/2">
-              <p class="md:text-xl">{{book.title}}</p>
-              <p class="text-grey-4 mt-6">ISBN: {{  book.isbn }}</p>
-              <p class="mt-6">{{  book.author}}</p>
+          v-if="books.length > 0">
+        <div class="flex flex-col md:grid xl:grid-cols-3auto md:grid-cols-2auto gap-4 py-6">
+          <div v-for="(book, index) in books" :key="index">
+            <div
+                @click="handleClickSlide(book.id)"
+                class="flex item-book mb-4">
+              <template v-if="!book.scan_book">
+                <Cover
+                    class="md:w-1/2"
+                    :computed-class-width="computedClassWidth"
+                    :description="book.description"/>
+              </template>
+              <template v-else>
+                <img :src="book.scan_book" :class="computedClassWidth"/>
+              </template>
+              <div class="book-text ml-5 text-left md:w-1/2">
+                <p class="md:text-xl">{{book.title}}</p>
+                <p class="text-grey-4 mt-6">ISBN: {{  book.isbn }}</p>
+                <p class="mt-6">{{  book.author}}</p>
+              </div>
             </div>
           </div>
+        </div>
+        <div class="w-100" v-if="total > (total / per_page)">
+          <paginate
+              :page-count="Math.ceil(total/per_page)"
+              v-model="current_page"
+              :next-class="'hidden'"
+              :prev-class="'hidden'"
+              :click-handler="clickCallback"
+              :container-class="'pagination'">
+          </paginate>
         </div>
       </div>
       <div
         v-else
       >
         <p class="text-left pt-12 text-xl">Нiчого не знайдено</p>
-      </div>
-      <div v-if="loadingNextData">
-        <div class="spinner flex justify-center items-center py-16">
-          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-red" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-        </div>
       </div>
     </div>
     <Loader v-else/>
@@ -68,6 +71,9 @@ import Cover from '@/components/Cover.vue'
 import Loader from '@/components/Loader'
 import Search from '@/components/Search'
 import resizeCoverMixin from '@/mixins/resizeCoverMixin'
+import Paginate from 'vuejs-paginate'
+import _ from 'lodash'
+import {SET_QUERY_WORD} from '@/constats'
 
 export default {
   name: 'Result',
@@ -75,7 +81,8 @@ export default {
   components: {
     Search,
     Cover,
-    Loader
+    Loader,
+    Paginate
   },
   data () {
     return {
@@ -83,8 +90,9 @@ export default {
       isLoadedData: false,
       loadingNextData: false,
       last_page: null,
-      current_page: null,
-      total: null
+      current_page: 1,
+      total: null,
+      per_page: null
     }
   },
   computed: {
@@ -95,22 +103,26 @@ export default {
   beforeMount () {
     this.fetchData()
   },
-  mounted () {
-    this.scroll()
-  },
   methods: {
+    clickCallback (pageNum) {
+      this.fetchData(pageNum)
+    },
     handleClickSlide (id) {
       this.$router.push({ name: 'book', params: {id} })
     },
-    async fetchData () {
+    async fetchData (page = 1) {
       this.isLoadedData = false
       try {
         const url = 'api/lib/search'
-        const searchParams = this.transformParams(this.getSearchParams)
-        const response = await this.$http.get(url, { params : { ...searchParams }})
+        const searchParams = _.cloneDeep(this.getSearchParams)
+        searchParams.page = page
+        const transformSearchParams = this.transformParams(searchParams)
+
+        const response = await this.$http.get(url, { params : { ...transformSearchParams }})
         if (response.data.data.items.length > 0) {
           this.books = this.transformData(response.data.data.items)
           this.last_page = response.data.data.last_page
+          this.per_page = response.data.data.per_page
           this.current_page = response.data.data.current_page
           this.total = response.data.data.total
         } else {
@@ -122,29 +134,6 @@ export default {
           console.log('Server Error:', err)
         }
         this.isLoadedData = true
-      }
-    },
-    fetchNextData () {
-      this.loadingNextData = true
-      const url = 'api/lib/search'
-      const page = ++this.current_page
-      this.$http.get(url, {params : {...this.getSearchParams, page}})
-        .then((response) => {
-          const transformedData = this.transformData(response.data.data.items)
-          this.books = this.books.concat(transformedData)
-          this.loadingNextData = false
-        })
-        .catch((error) => {
-          console.error(error)
-          this.loadingNextData = false
-        })
-    },
-    scroll () {
-      window.onscroll = () => {
-        const bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
-        if (bottomOfWindow && this.last_page > this.current_page) {
-          this.fetchNextData()
-        }
       }
     },
     transformData (data) {
@@ -173,6 +162,7 @@ export default {
       return searchParams
     },
     goBack () {
+      this.$store.commit(SET_QUERY_WORD, {s: ''})
       this.$router.back()
     },
     search () {
@@ -212,5 +202,6 @@ export default {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
 </style>
 

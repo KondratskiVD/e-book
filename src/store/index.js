@@ -22,7 +22,8 @@ export default new Vuex.Store({
       audiences: null,
       date_from: null,
       date_to: null,
-      s: null
+      s: null,
+      page: 1
     },
     searchWords: {
       types: null,
