@@ -32,13 +32,15 @@
         </div>
         <div class="grid-item item2">
           <p class="md:text-3xl">{{book.title}}</p>
-          <p class="text-grey-4 mt-6">ISBN: {{  book.isbn }}</p>
+          <p class="text-grey-4 mt-6">ISBN <span v-for="(isbn, index) in book.isbn" :key="index">{{ isbn.name }}</span></p>
           <p class="mt-6">{{  book.author}}</p>
         </div>
         <div class="grid-item item3 flex justify-start">
           <div class="mr-6">
             <p class="text-grey-4 text-sm">Жанр</p>
-            <p class="mt-2">Художня лiтература</p>
+            <p class="mt-2">
+              {{book.rubric}}
+            </p>
             <div class="flex w-full mt-6">
               <div CLASS="mr-6">
                 <p class="text-grey-4 text-sm">Рiк</p>
@@ -46,13 +48,15 @@
               </div>
               <div>
                 <p class="text-grey-4 text-sm">Видачi</p>
-                <p>1245</p>
+                <p>{{ book.count_reads }}</p>
               </div>
             </div>
           </div>
           <div>
             <p class="text-grey-4 text-sm">Видавництво</p>
-            <p  class="mt-2">Х.; Белгород, Клуб семейного отдыха</p>
+            <p  class="mt-2">
+              {{ book.publication }}
+            </p>
             <p class="text-grey-4 mt-6 text-sm">Рейтинг</p>
             <star-rating
                 :star-size="25"
@@ -129,11 +133,15 @@ export default {
     transformData (data) {
       return {
         title: data.title ?? 'Немає назви',
-        isbn: data.isbn[0]?.name ?? 'Немає ISBN',
+        isbn: data.isbn ?? [],
         author: data.author?.name ?? 'Немає автора',
         year: data.year ?? 'Немає року',
         rating: data.rating ?? 5,
-        libraries: data.libraries
+        libraries: data.libraries,
+        publication: data.publication?.name ?? '-',
+        count_reads: data.count_reads ?? 0,
+        rubric: data.rubric?.name ?? '-'
+
       }
     },
     goBack () {
