@@ -22,12 +22,15 @@
       </div>
       <div class="grid-container  py-6">
         <div class="grid-item item1">
-          <div>
+          <div v-if="!book.scan_book">
             <Cover
               :computed-class-width="computedClassWidth"
               :key="computedClassWidth"
               class="view-book pr-4"
               :description="book"/>
+          </div>
+          <div v-else>
+            <img :src="book.scan_book" class="view-book pr-4"/>
           </div>
         </div>
         <div class="grid-item item2">
@@ -140,7 +143,8 @@ export default {
         libraries: data.libraries,
         publication: data.publication?.name ?? '-',
         count_reads: data.count_reads ?? 0,
-        rubric: data.rubric?.name ?? '-'
+        rubric: data.rubric?.name ?? '-',
+        scan_book: data.scan_book ?? false
 
       }
     },
@@ -181,6 +185,11 @@ export default {
 .item4 {
   grid-column: 2/4;
   grid-row: 3/4;
+}
+@media screen and (min-width: 1025px) {
+  .view-book {
+    width: 250px;
+  }
 }
 @media screen and (max-width: 1024px) {
   .view-book {

@@ -12,11 +12,15 @@
             :options="swiperOption"
         >
           <swiper-slide v-for="(book, index) in row.descriptions" :key="index">
-            <div @click="handleClickSlide(book.id)">
+            <div @click="handleClickSlide(book.id)" v-if="book.scan_book == null">
               <Cover
                   :computed-class-width="computedClassWidth"
                   :is-slider="true"
                   :description="book"/>
+            </div>
+            <div @click="handleClickSlide(book.id)" v-else>
+              <img :src="book.scan_book" :class="computedClassWidth"
+                   :is-slider="true" />
             </div>
           </swiper-slide>
           <div class="swiper-pagination" slot="pagination"></div>
@@ -56,10 +60,10 @@ export default {
         slidesPerGroup: 1,
         loop: true,
         loopFillGroupWithBlank: true,
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: false
-        },
+        // pagination: {
+        //   el: '.swiper-pagination',
+        //   clickable: false
+        // },
         navigation: {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev'
@@ -97,5 +101,13 @@ export default {
 
 <style scoped>
 
+.h-170 {
+  height: 170px;
+  width: 115px;
+}
+.h-250 {
+  height: 250px;
+  width: 190px;
+}
 </style>
 

@@ -28,10 +28,15 @@
           <div
               @click="handleClickSlide(book.id)"
               class="flex item-book mb-4">
+            <template v-if="!book.scan_book">
             <Cover
                 class="md:w-1/2"
                 :computed-class-width="computedClassWidth"
               :description="book.description"/>
+            </template>
+            <template v-else>
+              <img :src="book.scan_book" :class="computedClassWidth"/>
+            </template>
             <div class="book-text ml-5 text-left md:w-1/2">
               <p class="md:text-xl">{{book.title}}</p>
               <p class="text-grey-4 mt-6">ISBN: {{  book.isbn }}</p>
@@ -147,6 +152,7 @@ export default {
         title: book.description.title ?? 'Немає назви',
         isbn: book.description.isbn[0]?.name ?? 'Немає ISBN',
         author: book.description.author?.name ?? 'Немає автора',
+        scan_book: book.description.scan_book ?? false,
         description: book.description,
         id: book.description.id
       })
@@ -186,6 +192,15 @@ export default {
   width: 100%;
   left: 0;
   bottom: 0
+}
+
+.h-170 {
+  height: 170px;
+  width: 115px;
+}
+.h-250 {
+  height: 250px;
+  width: 190px;
 }
 
 @-webkit-keyframes spinner {
