@@ -45,7 +45,7 @@
             </div>
           </div>
         </div>
-        <div class="w-100" v-if="total > (total / per_page)">
+        <div class="w-100" v-if="(total / per_page) > 1">
           <paginate
               :page-count="Math.ceil(total/per_page)"
               v-model="current_page"
