@@ -30,7 +30,7 @@
               :description="book"/>
           </div>
           <div v-else>
-            <img :src="book.scan_book" class="view-book pr-4"/>
+            <img :src="book.scan_book" class="view-book pr-4 cover"/>
           </div>
         </div>
         <div class="grid-item item2">
@@ -159,6 +159,17 @@ export default {
 </script>
 
 <style scoped>
+
+.cover {
+  background-size: 100% 100%;
+  text-align: left;
+  position: relative;
+  border: #AEADC3 1px solid;
+  -webkit-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
+  -moz-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
+  box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
+  overflow: hidden;
+}
 
 .grid-container {
   display: grid;

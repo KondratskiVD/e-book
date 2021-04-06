@@ -19,7 +19,7 @@
                   :description="book"/>
             </div>
             <div @click="handleClickSlide(book.id)" v-else>
-              <img :src="book.scan_book" :class="computedClassWidth"
+              <img :src="book.scan_book" :class="computedClassWidth + 'cover'"
                    :is-slider="true" />
             </div>
           </swiper-slide>
@@ -100,7 +100,16 @@ export default {
 </script>
 
 <style scoped>
-
+.cover {
+  background-size: 100% 100%;
+  text-align: left;
+  position: relative;
+  border: #AEADC3 1px solid;
+  -webkit-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
+  -moz-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
+  box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
+  overflow: hidden;
+}
 .h-170 {
   height: 170px;
   width: 115px;

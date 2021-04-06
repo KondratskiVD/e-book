@@ -35,7 +35,7 @@
                     :description="book.description"/>
               </template>
               <template v-else>
-                <img :src="book.scan_book" :class="computedClassWidth"/>
+                <img :src="book.scan_book" :class="computedClassWidth + 'cover'"/>
               </template>
               <div class="book-text ml-5 text-left md:w-1/2">
                 <p class="md:text-xl">{{book.title}}</p>
@@ -182,6 +182,17 @@ export default {
   width: 100%;
   left: 0;
   bottom: 0
+}
+
+.cover {
+  background-size: 100% 100%;
+  text-align: left;
+  position: relative;
+  border: #AEADC3 1px solid;
+  -webkit-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
+  -moz-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
+  box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
+  overflow: hidden;
 }
 
 .h-170 {
