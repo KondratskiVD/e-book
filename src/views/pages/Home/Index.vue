@@ -19,8 +19,10 @@
                   :description="book"/>
             </div>
             <div @click="handleClickSlide(book.id)" v-else>
-              <img :src="book.scan_book" :class="computedClassWidth + 'cover'"
-                   :is-slider="true" />
+              <div id="cover">
+                <img :src="book.scan_book" :class="computedClassWidth + ' cover'"
+                     :is-slider="true" />
+              </div>
             </div>
           </swiper-slide>
           <div class="swiper-pagination" slot="pagination"></div>
@@ -100,6 +102,9 @@ export default {
 </script>
 
 <style scoped>
+#cover {
+  cursor: pointer;
+}
 .cover {
   background-size: 100% 100%;
   text-align: left;

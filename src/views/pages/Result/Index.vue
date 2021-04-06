@@ -18,7 +18,7 @@
           </svg>
         </span>
         </p>
-        <p class="text-2xl text-dark">Пошук</p>
+        <p class="text-2xl text-dark">Пошук (знайдено {{total}} книг)</p>
         <p/>
       </div>
       <div
@@ -35,7 +35,9 @@
                     :description="book.description"/>
               </template>
               <template v-else>
-                <img :src="book.scan_book" :class="computedClassWidth + 'cover'"/>
+                <div id="cover">
+                  <img :src="book.scan_book" :class="computedClassWidth + ' cover'"/>
+                </div>
               </template>
               <div class="book-text ml-5 text-left md:w-1/2">
                 <p class="md:text-xl">{{book.title}}</p>
@@ -139,8 +141,8 @@ export default {
     transformData (data) {
       return data.map(book => ({
         title: book.description.title ?? 'Немає назви',
-        isbn: book.description.isbn[0]?.name ?? 'Немає ISBN',
-        author: book.description.author?.name ?? 'Немає автора',
+        isbn: book.description.isbn[0]?.name ?? '',
+        author: book.description.author?.name ?? '-',
         scan_book: book.description.scan_book ?? false,
         description: book.description,
         id: book.description.id
@@ -183,7 +185,9 @@ export default {
   left: 0;
   bottom: 0
 }
-
+#cover {
+  cursor: pointer;
+}
 .cover {
   background-size: 100% 100%;
   text-align: left;

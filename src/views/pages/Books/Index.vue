@@ -30,7 +30,7 @@
               :description="book"/>
           </div>
           <div v-else>
-            <img :src="book.scan_book" class="view-book pr-4 cover"/>
+            <img :src="book.scan_book" class="view-book cover"/>
           </div>
         </div>
         <div class="grid-item item2">
@@ -137,8 +137,8 @@ export default {
       return {
         title: data.title ?? 'Немає назви',
         isbn: data.isbn ?? [],
-        author: data.author?.name ?? 'Немає автора',
-        year: data.year ?? 'Немає року',
+        author: data.author?.name ?? '-',
+        year: data.year ?? '-',
         rating: data.rating ?? 5,
         libraries: data.libraries,
         publication: data.publication?.name ?? '-',

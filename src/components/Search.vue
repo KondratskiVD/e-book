@@ -43,7 +43,6 @@
     </div>
     <collapse-transition>
       <div v-if="showFilter" class="py-8">
-        <p class="text-2xl text-dark text-left mb-8">Розширенний Пошук <span> - Знайдено {{ total }} книг(и)</span></p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-12">
           <SelectSuggest
             @filtered="onFiltered"
