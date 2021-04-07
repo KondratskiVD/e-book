@@ -190,6 +190,11 @@ export default {
   },
   computed: {
     cover () {
+      if (this.description.cover) {
+        if (parseInt(this.description.cover) === 5) return 1
+        if (parseInt(this.description.cover) === 6) return 2
+        return parseInt(this.description.cover)
+      }
       return Math.floor(Math.random() * Math.floor(4)) + 1
     },
     sliderWidth () {

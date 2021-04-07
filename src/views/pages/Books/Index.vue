@@ -144,7 +144,8 @@ export default {
         publication: data.publication?.name ?? '-',
         count_reads: data.count_reads ?? 0,
         rubric: data.rubric?.name ?? '-',
-        scan_book: data.scan_book ?? false
+        scan_book: data.scan_book ?? false,
+        cover: data.cover ?? 0
 
       }
     },

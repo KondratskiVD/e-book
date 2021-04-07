@@ -129,6 +129,7 @@ export default {
           this.total = response.data.data.total
         } else {
           this.books = []
+          this.total = 0
         }
         this.isLoadedData = true
       } catch (err) {
