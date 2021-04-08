@@ -20,7 +20,7 @@
                 :is-slider="true"
                 :description="book"/>
             </div>
-            <div @click="handleClickSlide(book.id)" v-else>
+            <div v-else>
               <div class="cover-img">
                 <img :src="book.scan_book" :class="computedClassWidth + ' cover'"
                   :is-slider="true" />
@@ -77,7 +77,8 @@ export default {
     handleClickSlide (e) {
       const slide = e.target.closest('.swiper-slide')
       if (slide) {
-        this.$router.push({ name: 'book', params: {id: slide.id} })
+        // this.$router.push({ name: 'book', params: {id: slide.id} })
+        console.log(slide)
       }
     },
     async fetchData () {
