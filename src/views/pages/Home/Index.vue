@@ -1,31 +1,32 @@
 <template>
   <div>
-    <Search
-      @search-value="search"
-    />
+    <Search @search-value="search"/>
     <div v-if="isLoadedData">
-      <div class="py-6" v-for="(row, index) in books" :key="index">
+      <div class="py-6" v-for="row in books" :key="row.id">
         <h2 class="text-2xl text-blue-4 text-left pb-2">{{  row.name | capitalize }}</h2>
         <swiper
-            class="swiper"
-            :key="swiperOption.slidesPerView"
-            :options="swiperOption"
+          class="swiper"
+          :key="swiperOption.slidesPerView"
+          :options="swiperOption"
+          @click="handleClickSlide"
         >
-          <swiper-slide v-for="(book, index) in row.descriptions" :key="index">
-            <div @click="handleClickSlide(book.id)" v-if="book.scan_book == null">
+          <swiper-slide
+              v-for="book in row.descriptions"
+              :id="book.id"
+              :key="book.id">
+            <div v-if="book.scan_book == null">
               <Cover
-                  :computed-class-width="computedClassWidth"
-                  :is-slider="true"
-                  :description="book"/>
+                :computed-class-width="computedClassWidth"
+                :is-slider="true"
+                :description="book"/>
             </div>
             <div @click="handleClickSlide(book.id)" v-else>
-              <div id="cover">
+              <div class="cover-img">
                 <img :src="book.scan_book" :class="computedClassWidth + ' cover'"
-                     :is-slider="true" />
+                  :is-slider="true" />
               </div>
             </div>
           </swiper-slide>
-          <div class="swiper-pagination" slot="pagination"></div>
           <div class="swiper-button-prev" slot="button-prev"></div>
           <div class="swiper-button-next" slot="button-next"></div>
         </swiper>
@@ -62,23 +63,22 @@ export default {
         slidesPerGroup: 1,
         loop: true,
         loopFillGroupWithBlank: true,
-        // pagination: {
-        //   el: '.swiper-pagination',
-        //   clickable: false
-        // },
         navigation: {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev'
         }
-      },
+      }
     }
   },
   mounted () {
     this.fetchData()
   },
   methods: {
-    handleClickSlide (id) {
-      this.$router.push({ name: 'book', params: {id} })
+    handleClickSlide (e) {
+      const slide = e.target.closest('.swiper-slide')
+      if (slide) {
+        this.$router.push({ name: 'book', params: {id: slide.id} })
+      }
     },
     async fetchData () {
       try {
@@ -98,30 +98,10 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>
-#cover {
+.cover-img {
   cursor: pointer;
 }
-.cover {
-  background-size: 100% 100%;
-  text-align: left;
-  position: relative;
-  border: #AEADC3 1px solid;
-  -webkit-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
-  -moz-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
-  box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
-  overflow: hidden;
-}
-.h-170 {
-  height: 170px;
-  width: 115px;
-}
-.h-250 {
-  height: 250px;
-  width: 190px;
-}
 </style>
-

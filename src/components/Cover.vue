@@ -1,5 +1,5 @@
 <template>
-  <div id="cover">
+  <div>
     <div v-if="cover === 1"
          v-bind:style="sliderWidth"
          :class="computedClassWidth"
@@ -247,12 +247,6 @@ export default {
 /*  background-image: url("../assets/images/cover-6.png");*/
 /*}*/
 
-#cover {
-  /*width: 490px;*/
-  /*z-index: -1;*/
-  /*position:relative;*/
-  cursor: pointer;
-}
 .cover {
   background-size: 100% 100%;
   text-align: left;
@@ -262,6 +256,7 @@ export default {
   -moz-box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
   box-shadow: 0px 0px 19px -10px rgba(0,0,0,0.81);
   overflow: hidden;
+  cursor: pointer;
 }
 
 h1 {
