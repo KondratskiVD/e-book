@@ -77,8 +77,7 @@ export default {
     handleClickSlide (e) {
       const slide = e.target.closest('.swiper-slide')
       if (slide) {
-        // this.$router.push({ name: 'book', params: {id: slide.id} })
-        console.log(slide)
+        this.$router.push({ name: 'book', params: {id: slide.id} })
       }
     },
     async fetchData () {
