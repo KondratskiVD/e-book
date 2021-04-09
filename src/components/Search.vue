@@ -112,7 +112,7 @@
             @click="searchBooksByFilter"
             class="bg-green-1 text-white py-4 px-8 rounded-md shadow mr-0 mr-4">ПОШУК</button>
           <button class="text-grey-4 py-4 px-4 rounded-md border border-grey-button"
-          @click="clearFilter">СКУСУВАТИ</button>
+          @click="clearFilter">СКАСУВАТИ</button>
         </div>
       </div>
     </collapse-transition>
